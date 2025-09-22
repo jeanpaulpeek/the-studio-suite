@@ -1,0 +1,6 @@
+project_id,project_type,scope,quality,region,year,gross_m2,net_m2,total_cost_excl_vat,include_mep,include_pm_logistics,complexity,notes
+OFF-001,office,both,mid,NL-Randstad,2024,1200,900,930000,True,True,standard,Totaalrenovatie met FF&E + afbouw; standaard maatwerk pantry.
+HOS-101,hospitality,both,high,NL-Randstad,2023,800,560,1160000,True,True,maatwerk,Boutique hospitality; veel maatwerk bar/bench; premium stoffen.
+RET-205,retail,FF&E,mid,NL-overig,2024,500,350,182000,False,True,standard,"Chain store refresh; vooral meubilair, verlichting, signing."
+RES-077,residential,both,basic,NL-overig,2025,300,210,204000,True,False,standard,"Appartement; basis afbouw + FF&E, standaard keuken/sanitair."
+OFF-009,office,afbouw,mid,NL-overig,2022,2000,1400,620000,False,True,standard,"Alleen afbouw (vloeren, plafonds, wanden); geen FF&E."
