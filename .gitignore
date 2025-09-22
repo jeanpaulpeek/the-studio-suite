@@ -1,0 +1,55 @@
+# --- OS rommel ---
+.DS_Store
+Thumbs.db
+
+# --- Python build/bytecode ---
+__pycache__/
+*.py[cod]
+*$py.class
+dist/
+build/
+.eggs/
+*.egg-info/
+
+# --- Virtuele omgevingen ---
+.venv/
+venv/
+env/
+
+# --- Test/coverage/tools ---
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+coverage.xml
+htmlcov/
+.tox/
+
+# --- Notebooks ---
+.ipynb_checkpoints/
+
+# --- IDE/project files ---
+.vscode/
+.idea/
+
+# --- Logs & sqlite ---
+*.log
+logs/
+*.sqlite3
+
+# --- Streamlit ---
+# Secrets nooit committen
+.streamlit/secrets.toml
+# Config wél committen (thema e.d.)
+!.streamlit/config.toml
+
+# --- Omgevingsvariabelen ---
+.env
+.env.*
+*.env
+
+# --- Data ---
+# Als je lokaal met ruwe data werkt: zet dat in /data en ignore die.
+data/
+# Maar hou voorbeeldbestanden in repo:
+!examples/**
