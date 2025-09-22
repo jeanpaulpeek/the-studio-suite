@@ -1,1 +1,7 @@
+[theme]
+primaryColor = "#6E4B3A"
+backgroundColor = "#FAF8F6"
+secondaryBackgroundColor = "#FFFFFF"
+textColor = "#141414"
+baseRadius = 14
 
