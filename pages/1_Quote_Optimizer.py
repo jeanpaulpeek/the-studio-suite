@@ -16,6 +16,90 @@ from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Table, TableStyle, Spacer
 from reportlab.pdfgen import canvas as rl_canvas
 from pypdf import PdfReader, PdfWriter
+from statistics import median
+from typing import Dict, Tuple, Optional
+import io
+
+# ---------- Robuuste paden ----------
+ROOT = Path(__file__).resolve().parents[1]
+EX   = ROOT / "examples"
+INTAKE_XLSX = EX / "M2_Budget_Checker_Intake.xlsx"
+SEED_CSV    = EX / "m2_budget_checker_seed.csv"
+
+def download_buttons():
+    # laat downloadknoppen zien als files bestaan
+    cols = st.columns(2)
+    with cols[0]:
+        if INTAKE_XLSX.exists():
+            st.download_button(
+                "Download intake template (xlsx)",
+                INTAKE_XLSX.read_bytes(),
+                file_name="M2_Budget_Checker_Intake.xlsx",
+                mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+            )
+    with cols[1]:
+        if SEED_CSV.exists():
+            st.download_button(
+                "Download seed (csv)",
+                SEED_CSV.read_bytes(),
+                file_name="m2_budget_checker_seed.csv",
+                mime="text/csv"
+            )
+
+def read_intake_xlsx(file_like=None) -> pd.DataFrame:
+    if file_like is not None:
+        return pd.read_excel(file_like)
+    if INTAKE_XLSX.exists():
+        return pd.read_excel(INTAKE_XLSX)
+    st.info("Geen intake.xlsx gevonden. Upload er één of plaats 'm in /examples.")
+    st.stop()
+
+def read_seed_csv(file_like=None) -> pd.DataFrame:
+    # slim inlezen (komma/semicolon autodetect + EU-decimaal)
+    if file_like is not None:
+        return pd.read_csv(file_like, sep=None, engine="python")
+    if SEED_CSV.exists():
+        return pd.read_csv(SEED_CSV, sep=None, engine="python")
+    st.info("Geen seed.csv gevonden. Upload er één of plaats 'm in /examples.")
+    st.stop()
+
+def generate_demo_df() -> pd.DataFrame:
+    # Heel simpele demo; pas aan naar jouw kolommen
+    return pd.DataFrame([
+        {"post":"Meubilair","aandeel":0.55,"bedrag_per_m2":190},
+        {"post":"Verlichting","aandeel":0.12,"bedrag_per_m2":40},
+        {"post":"Akoestiek","aandeel":0.10,"bedrag_per_m2":35},
+        {"post":"Overig","aandeel":0.23,"bedrag_per_m2":85},
+    ])
+
+# ---------- UI: keuze bron ----------
+st.subheader("Brondata")
+download_buttons()
+
+bron = st.radio("Kies bron", ["Demo", "Intake.xlsx", "Seed CSV", "Upload bestanden"], horizontal=True)
+
+df_source = None
+if bron == "Demo":
+    df_source = generate_demo_df()
+elif bron == "Intake.xlsx":
+    df_source = read_intake_xlsx()
+elif bron == "Seed CSV":
+    df_source = read_seed_csv()
+else:
+    up1 = st.file_uploader("Upload intake.xlsx", type=["xlsx","xls"])
+    up2 = st.file_uploader("Upload seed.csv (optioneel)", type=["csv"])
+    if up1 is not None:
+        df_source = read_intake_xlsx(up1)
+    elif up2 is not None:
+        df_source = read_seed_csv(up2)
+    else:
+        st.info("Upload een bestand of kies een andere bron hierboven.")
+        st.stop()
+
+st.success(f"Bron geladen: {bron}")
+st.dataframe(df_source, use_container_width=True)
+
+# ... vanaf hier doe je je bestaande berekening / rendering ...
 
 # ----------------- Page settings & clean Notion-like CSS -----------------
 st.set_page_config(page_title="The Studio - Budget Optimizer Voor Interieur Professionals", page_icon="🧾", layout="wide")
